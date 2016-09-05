@@ -4,16 +4,7 @@ class UsersController < ApplicationController
   end
 
   def show
-
-    ##?? OR -> if params[:id] > User.last.id .....
-
-    begin
-      render json:  User.find(params[:id])
-    rescue
-      render(
-        json: 'No such user', status: :not_found
-      )
-    end
+    User.find(params[:id])
   end
 
   def create
@@ -29,7 +20,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @user = User.find(params[:id])
+    @user = User.find_by(id: params[:id])
     if @user.destroy
       redirect_to '/users'
     else
@@ -40,14 +31,19 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find(params[:id])
-    @user.update!(user_params)
-    render json: @user
+    @user = User.find_by(params[:id])
+    if @user.update!(user_params)
+      render json: @user
+    else
+      render(
+        json: user.errors.full_messages, status: :unprocessable_entity
+      )
+    end
   end
 
   private
 
   def user_params
-    params.require(:user).permit(:name, :email)
+    params.require(:user).permit(:username)
   end
 end

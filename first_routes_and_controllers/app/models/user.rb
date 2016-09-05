@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
 
   has_many(
     :contact_shares,
+    dependent: :destroy,
     class_name: "ContactShare",
     foreign_key: :user_id,
     primary_key: :id
@@ -16,6 +17,7 @@ class User < ActiveRecord::Base
 
   has_many(
     :contacts,
+    dependent: :destroy,
     class_name: "Contact",
     foreign_key: :user_id
   )
