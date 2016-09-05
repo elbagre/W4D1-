@@ -19,7 +19,10 @@ class ContactsController < ApplicationController
   end
 
   def index
-    render json: Contact.all
+    user = User.find(params[:id])
+    @contacts = user.contacts + user.shared_contacts
+
+    render json: @contacts 
   end
 
   def show
@@ -35,7 +38,7 @@ class ContactsController < ApplicationController
     else
       render json: @contact.errors.full_messages, status: :unprocessable_entity
     end
-  end 
+  end
 
 
   private
